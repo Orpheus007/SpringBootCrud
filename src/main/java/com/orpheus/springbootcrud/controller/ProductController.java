@@ -51,6 +51,7 @@ public class ProductController {
         CompletableFuture<List<Product>> thread2 = service.getProductsAsync();
         CompletableFuture<List<Product>> thread3 = service.getProductsAsync();
 
+
         CompletableFuture.allOf(thread1,thread2,thread3).join();
 
         return service.deleteProduct(id);

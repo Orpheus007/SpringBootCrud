@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProductService {
@@ -51,7 +53,13 @@ public class ProductService {
 
     @Async
     public CompletableFuture<List<Product>> getProductsAsync() {
-        List<Product> products = repository.findAll();
-        return CompletableFuture.completedFuture(products);
+
+        Executor delay = CompletableFuture.delayedExecutor(500, TimeUnit.MILLISECONDS);
+
+        return CompletableFuture.supplyAsync(() -> {
+            return repository.findAll();
+        }).thenApplyAsync((list) -> {
+            return list;
+        },delay);
     }
 }
