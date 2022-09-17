@@ -3,9 +3,11 @@ package com.orpheus.springbootcrud.service;
 import com.orpheus.springbootcrud.entity.Product;
 import com.orpheus.springbootcrud.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProductService {
@@ -45,5 +47,11 @@ public class ProductService {
         dbProduct.setQuantity(product.getQuantity());
         dbProduct.setPrice(product.getPrice());
         return repository.save(dbProduct);
+    }
+
+    @Async
+    public CompletableFuture<List<Product>> getProductsAsync() {
+        List<Product> products = repository.findAll();
+        return CompletableFuture.completedFuture(products);
     }
 }

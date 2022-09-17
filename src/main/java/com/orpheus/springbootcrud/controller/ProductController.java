@@ -3,10 +3,12 @@ package com.orpheus.springbootcrud.controller;
 import com.orpheus.springbootcrud.entity.Product;
 import com.orpheus.springbootcrud.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class ProductController {
@@ -45,6 +47,12 @@ public class ProductController {
     }
     @DeleteMapping("/delete")
     public String deleteProduct(@PathVariable int id) {
+        CompletableFuture<List<Product>> thread1 = service.getProductsAsync();
+        CompletableFuture<List<Product>> thread2 = service.getProductsAsync();
+        CompletableFuture<List<Product>> thread3 = service.getProductsAsync();
+
+        CompletableFuture.allOf(thread1,thread2,thread3).join();
+
         return service.deleteProduct(id);
     }
 }
